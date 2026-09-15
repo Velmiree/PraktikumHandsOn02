@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use App\Services\LayananKasir;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+
+final class TransaksiController extends Controller
+{
+    public function __construct(
+        private readonly LayananKasir $kasir,
+    ) {}
+
+    public function index(Request $request): JsonResponse
+    {
+        $tanggal = $request->string('tanggal')->trim()->toString();
+
+        $tanggal = $tanggal !== ''
+            ? $tanggal
+            : now()->toDateString();
+
+        return response()->json([
+            'data' => $this->kasir->transaksiTanggal($tanggal),
+            'meta' => [
+                'tanggal' => $tanggal,
+            ],
+        ]);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'item' => ['required', 'array', 'min:1'],
+            'item.*.sku' => ['required', 'string'],
+            'item.*.kuantitas' => ['required', 'integer', 'min:1'],
+            'metode_bayar' => ['required', 'string'],
+            'member' => ['sometimes', 'boolean'],
+            'dibayar' => ['sometimes', 'integer', 'min:0'],
+        ]);
+
+        $kasir = (string) $request->attributes->get('kasir', 'kasir');
+
+        $transaksi = $this->kasir->proses(
+            data: $data,
+            kasir: $kasir,
+        );
+
+        return response()->json([
+            'data' => $transaksi,
+        ], 201);
+    }
+
+    public function show(string $nomor): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->kasir->cari($nomor),
+        ]);
+    }
+
+    public function batal(
+        Request $request,
+        string $nomor
+    ): JsonResponse {
+        $data = $request->validate([
+            'alasan' => ['required', 'string', 'min:3'],
+        ]);
+
+        $kasir = (string) $request->attributes->get('kasir', 'kasir');
+
+        return response()->json([
+            'data' => $this->kasir->batalkan(
+                nomor: $nomor,
+                alasan: $data['alasan'],
+                olehKasir: $kasir,
+            ),
+        ]);
+    }
+}
