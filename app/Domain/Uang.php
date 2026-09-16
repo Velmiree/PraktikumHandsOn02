@@ -61,6 +61,6 @@ final readonly class Uang
 
     public function format(): string
     {
-        return 'Rp ' . number_format($this->rupiah, 0, ',', '.');
+        return 'Rp '.number_format($this->rupiah, 0, ',', '.');
     }
 }
