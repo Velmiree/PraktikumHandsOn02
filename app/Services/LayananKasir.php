@@ -32,7 +32,7 @@ final class LayananKasir
      * Menghitung rincian struk tanpa menyimpannya.
      * Dipakai ulang oleh endpoint pratinjau maupun oleh proses().
      *
-     * @param array<int, array{sku: string, kuantitas: int}> $item
+     * @param  array<int, array{sku: string, kuantitas: int}>  $item
      * @return array<string, mixed>
      */
     public function hitung(array $item, bool $member = false): array
@@ -120,7 +120,7 @@ final class LayananKasir
     /**
      * Memproses satu penjualan dan menyimpan struknya.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, mixed>
      */
     public function proses(array $data, string $kasir): array
@@ -201,8 +201,7 @@ final class LayananKasir
         return array_values(
             array_filter(
                 $this->transaksi->semua(),
-                static fn (array $t): bool =>
-                    str_starts_with($t['waktu'], $tanggal)
+                static fn (array $t): bool => str_starts_with($t['waktu'], $tanggal)
             )
         );
     }
@@ -227,11 +226,10 @@ final class LayananKasir
         $urut = count(
             array_filter(
                 $this->transaksi->semua(),
-                static fn (array $t): bool =>
-                    str_starts_with(
-                        $t['nomor'],
-                        "POS-{$tanggal}"
-                    )
+                static fn (array $t): bool => str_starts_with(
+                    $t['nomor'],
+                    "POS-{$tanggal}"
+                )
             )
         ) + 1;
 

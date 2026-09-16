@@ -42,11 +42,11 @@ final class TransaksiController extends Controller
             'dibayar' => ['sometimes', 'integer', 'min:0'],
         ]);
 
-        $kasir = (string) $request->attributes->get('kasir', 'kasir');
+        $kasir = $request->attributes->get('kasir');
 
         $transaksi = $this->kasir->proses(
             data: $data,
-            kasir: $kasir,
+            kasir: $kasir['nama'],
         );
 
         return response()->json([
@@ -69,13 +69,13 @@ final class TransaksiController extends Controller
             'alasan' => ['required', 'string', 'min:3'],
         ]);
 
-        $kasir = (string) $request->attributes->get('kasir', 'kasir');
+        $kasir = $request->attributes->get('kasir');
 
         return response()->json([
             'data' => $this->kasir->batalkan(
                 nomor: $nomor,
                 alasan: $data['alasan'],
-                olehKasir: $kasir,
+                olehKasir: $kasir['nama'],
             ),
         ]);
     }

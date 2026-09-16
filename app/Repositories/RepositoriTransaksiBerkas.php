@@ -43,6 +43,18 @@ final class RepositoriTransaksiBerkas implements RepositoriTransaksi
         $this->tulis($semua);
     }
 
+    public function perbarui(string $nomor, array $perubahan): void
+    {
+        $semua = $this->semua();
+
+        if (! isset($semua[$nomor])) {
+            return;
+        }
+
+        $semua[$nomor] = array_merge($semua[$nomor], $perubahan);
+        $this->tulis($semua);
+    }
+
     public function ubah(string $nomor, array $perubahan): void
     {
         $semua = $this->semua();

@@ -8,54 +8,86 @@ use App\Contracts\RepositoriProduk;
 
 final class RepositoriProdukArray implements RepositoriProduk
 {
-    /** @var array<int, array<string, mixed>> */
-    private array $produk = [
-        [
-            'sku' => 'BRG-001',
-            'nama' => 'Beras 5 Kg',
+    private const KATALOG = [
+        'SKU-001' => [
+            'nama' => 'Beras Pandan Wangi 5 kg',
             'kategori' => 'kebutuhan_rumah',
-            'harga' => 75000,
-            'stok' => 20,
+            'harga' => 72000,
+            'stok' => 40,
         ],
-        [
-            'sku' => 'BRG-002',
+        'SKU-002' => [
             'nama' => 'Minyak Goreng 1 L',
             'kategori' => 'kebutuhan_rumah',
-            'harga' => 18000,
-            'stok' => 30,
+            'harga' => 18500,
+            'stok' => 120,
         ],
-        [
-            'sku' => 'BRG-003',
-            'nama' => 'Mie Instan',
+        'SKU-003' => [
+            'nama' => 'Gula Pasir 1 kg',
+            'kategori' => 'kebutuhan_rumah',
+            'harga' => 15500,
+            'stok' => 85,
+        ],
+        'SKU-004' => [
+            'nama' => 'Kopi Bubuk 200 g',
+            'kategori' => 'minuman',
+            'harga' => 24000,
+            'stok' => 60,
+        ],
+        'SKU-005' => [
+            'nama' => 'Teh Celup 25 sachet',
+            'kategori' => 'minuman',
+            'harga' => 9500,
+            'stok' => 0,
+        ],
+        'SKU-006' => [
+            'nama' => 'Mie Instan Goreng',
             'kategori' => 'makanan',
-            'harga' => 3500,
-            'stok' => 50,
+            'harga' => 3400,
+            'stok' => 480,
+        ],
+        'SKU-007' => [
+            'nama' => 'Susu UHT 1 L',
+            'kategori' => 'minuman',
+            'harga' => 19000,
+            'stok' => 36,
+        ],
+        'SKU-008' => [
+            'nama' => 'Sabun Mandi Batang',
+            'kategori' => 'kebutuhan_rumah',
+            'harga' => 5200,
+            'stok' => 150,
         ],
     ];
 
     public function semua(): array
     {
-        return $this->produk;
+        return array_map(
+            static fn (string $sku): array => self::baris($sku),
+            array_keys(self::KATALOG),
+        );
     }
 
     public function cariSku(string $sku): ?array
     {
-        foreach ($this->produk as $produk) {
-            if ($produk['sku'] === $sku) {
-                return $produk;
-            }
-        }
+        $sku = strtoupper(trim($sku));
 
-        return null;
+        return isset(self::KATALOG[$sku])
+            ? self::baris($sku)
+            : null;
     }
 
     public function kurangiStok(string $sku, int $kuantitas): void
     {
-        foreach ($this->produk as $index => $produk) {
-            if ($produk['sku'] === $sku) {
-                $this->produk[$index]['stok'] -= $kuantitas;
-                return;
-            }
-        }
+        // Untuk repository array sederhana pada Modul 3,
+        // stok tidak perlu dipersistenkan antar request.
+    }
+
+    /** @return array<string, mixed> */
+    private static function baris(string $sku): array
+    {
+        return [
+            'sku' => $sku,
+            ...self::KATALOG[$sku],
+        ];
     }
 }
