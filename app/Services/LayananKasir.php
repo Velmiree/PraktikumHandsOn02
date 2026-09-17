@@ -93,7 +93,7 @@ final class LayananKasir
         $jamSekarang = now()->format('H:i');
 
         if ($jamSekarang >= '16:00' && $jamSekarang < '18:00') {
-            $diskonHappyHour = $subtotal->persen(10);
+            $diskonHappyHour = $subtotal->persen(20);
         }
 
         $totalDiskon = $diskonItem
