@@ -6,6 +6,7 @@ Endpoint tulis yang digunakan untuk menggambarkan alur request adalah:
 
 ```text
 POST /api/v1/pos/transaksi
+```
 
 # Diagram Alur Request
 ┌──────────────────────────────┐

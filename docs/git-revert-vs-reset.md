@@ -8,3 +8,4 @@ Commit yang salah:
 
 ```text
 dc4ea91 test: intentionally wrong happy hour discount
+```
