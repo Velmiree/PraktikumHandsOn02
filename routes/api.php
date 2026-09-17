@@ -26,6 +26,12 @@ Route::prefix('v1/pos')
                 'message' => 'Data pelanggan Noven',
             ]);
         })->name('pelanggan.index');
+        
+        Route::get('/member', function () {
+            return response()->json([
+                'message' => 'Data member Hanif',
+            ]);
+        })->name('member.index');
 
         Route::get('/produk/{sku}', [ProdukController::class, 'show'])
             ->where('sku', 'SKU-[0-9]{3}')
